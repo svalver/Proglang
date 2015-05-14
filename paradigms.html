@@ -1,0 +1,1026 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Influence Backbone of Programming Paradigms</title>
+    <meta name="description" content="Visualization of the network showing the most important influence for any single programming language. Network rendered with vis.js and layout precomputed with Netlab.">    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Sergi Valverde (svalver@gmail.com)">
+    <style>
+        body 
+        {
+            font: 10pt arial;        
+            background: #000;
+            margin: 0;
+            color: #FFFFFF;
+            padding-right: 400px;
+            min-width: 640px; 
+            min-height:100%;
+        }
+        #header, #footer {
+            margin-left: -100px;
+            margin-right: -110px; 
+        }
+        .column { position: relative; float: left; }
+        #center { 
+            padding: 0 20px; 
+            width: 700px;
+            border: 1px  darkgray;
+            background-color:#000;
+        }
+        #right {
+            width: 300px;
+            padding: 0 10px; 
+            margin-right: -100%;
+            background: #333;
+        }
+        #footer { clear: both; } 
+        /*** IE fix ***/
+        * html #left {left: 170px; } 
+        /*** ABOUT BOX ***/
+        .modalDialog 
+        {
+            position: fixed;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #000;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 99999;
+            opacity:0;
+            -webkit-transition: opacity 400ms ease-in;
+            -moz-transition: opacity 400ms ease-in;
+            transition: opacity 400ms ease-in;
+            pointer-events: none;
+        }
+	   .modalDialog:target {
+		  opacity:1;
+		  pointer-events: auto;
+	   }
+	   .modalDialog > div {
+           width: 400px;
+		  position: relative;
+           margin: 10% auto;
+            padding: 5px 20px 13px 20px;
+            border-radius: 10px;
+            background: #fff;
+          /**  background: -moz-linear-gradient(#fff, #999);
+            background: -webkit-linear-gradient(#fff, #999);
+            background: -o-linear-gradient(#fff, #999); 
+           **/ 
+	   }
+        .about {
+            background: #606061;
+            color: #FFFFFF;
+        }
+	   .close {
+            background: #606061;
+            color: #FFFFFF;
+            line-height: 25px;
+            position: absolute;
+            right: -12px;
+            text-align: center;
+            top: -10px;
+            width: 24px;
+            text-decoration: none;
+            font-weight: bold;
+            -webkit-border-radius: 12px;
+            -moz-border-radius: 12px;
+            border-radius: 12px;
+            -moz-box-shadow: 1px 1px 3px #000;
+            -webkit-box-shadow: 1px 1px 3px #000;
+            box-shadow: 1px 1px 3px #000;
+	   }
+	.close:hover { background: #00d9ff; }
+    </style>
+    <script type="text/javascript" src="vis/dist/vis.js"></script>
+    <link type="text/css" rel="stylesheet" href="vis/dist/vis.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+</head>
+    
+<body>
+
+<!-- Network visualization -->
+<div id ="center" class="column">
+    <div id="mynetwork"></div>
+</div>
+    
+<!-- Information panel -->
+    <div id="openModal" class="modalDialog">
+	<div>
+		<a href="#close" title="Close" class="close">X</a>
+		<h2>About</h2>
+        <p> Network visualization showing the most important influence for any single programming language. The structure of the tree corresponds to a classification of languages (e.g., or language families). We use the method for network analysis proposed in Valverde and Solé (2015) "Punctuated Equilibrium in the Large-Scale Evolution of Programming Languages" Journal of the Royal Society Interface.</p>
+        <p> Graph rendering uses <a href="http://visjs.org/">vis.js</a> and the layout was precomputed with NetlabScript. This website was designed and implemented by Sergi Valverde (2015).</p>
+        <p>More information at:  <a href="http://complex.upf.es/~sergi">complex.upf.es/~sergi</a> and
+            <a href="https://twitter.com/svalver">@svalver</a>.</p> 
+	</div>
+    </div>
+    
+<div id="right" class="column">
+    <h3>The Influence Backbone of Programming Languages (1954-2012)</h3>
+    <p><a href="#openModal" class="about">About</a> </p>
+    <label>Paradigm</label>
+<select id="myselect">
+    <option value="" selected="selected"></option>
+    <option value="form_name1">Functional Languages</option>
+    <option value="form_name1_1">Logo family</option>
+    <option value="form_name1_2">Forth family</option>
+    <option value="form_name1_3">Smalltalk family</option>
+    <option value="form_name1_4">Scheme family</option>
+    <option value="form_name1_5">Ruby family</option>
+    <option value="form_name2">Imperative Languages</option>
+    <option value="form_name2_1">ISWIM family</option>
+    <option value="form_name2_2">JOSS and BASIC family</option>
+    <option value="form_name2_3">Algol family</option>
+    <option value="form_name2_4">Pascal family</option>
+    <option value="form_name2_5">C family</option>
+    <option value="form_name3">Array Languages</option>
+    <option value="form_name4">Business Languages</option>
+    <option value="form_name5">Logic Languages</option>
+    <option value="form_name6">Definition Languages</option>
+    
+</select>
+    
+<div class="show-hide" name="Functional" id="form_name1" style="display:none">
+<p> This group of languages have been historically associated to Lisp. They display a common trait called functional paradigm. Functional and logical languages belong to the larger class of declarative languages. Unlike the more common imperative paradigm (with Fortran or C as examples), the declarative approach does not describe the process to control computation. Instead, a program written in a declarative language is an abstract description of the task to be solved. Indeed, the design of Lisp was a radical departure from PLs based on Turing machines. The goal was to find easy ways to write, understand and maintain complex software. On the other hand, programmers find more difficult to develop user interfaces and certain processes in declarative languages than imperative languages. Functional languages, although more emphasised in academia rather than in commercial software development, has been quite influential for developing AI applications and in modern, multi-paradigm languages.</p></div>
+
+<div class="show-hide" name="Logo" id="form_name1_1" style="display:none">
+<p>Logo is an educational programming language designed in 1967 by Daniel G. Borrow, Wally Feurzeig, Seymour Papert and Cynthia Solomon in order to teach concepts of Lisp programming. Logo is a dialect of Lisp and it more commonly known because of its graphics capabilities involving the movement of robotic turtles (early versions of Logo) and virtual turtles in the screen (recent versions). This subfamily of functional languages includes the Logo dialects StarLogo (designed by Mitchel Resnick, Eric Klopfer and others at the MIT Media Lab) and Netlogo (by Uri Wilensky of Northwestern University) as well as other educational-related languages, i.e., Scratch (by Mitchel Resnick), Etoys (by Alan Kay) and Agentsheets (University of Colorado).</p></div>
+
+<div class="show-hide" name="Forth" id="form_name1_2" style="display:none"><p>Forth (designed by Charles H. Moore in the 1970’s) and its dialects colorForth (also designed by Charles H. Moore in the 1990’s) and MUF (Piaw Na, 1990) have been influenced by mathematical notation and provide tools for data processing. Forth is modelled after a stack machine and reverse Polish notation for mathematical expressions (a shared featured with Lisp). Important languages derived from Forth include Postscript (a language for creating vector graphics) and RPL (used in Hewlett-Packard’s handheld calculators). The design of stack-based languages follow a minimalistic philosophy, and they are relatively syntax-free. This trait has influenced the design of a number of esoteric programming languages (False) that allow very compact implementations.</p></div>
+    
+<div class="show-hide" name="Smalltalk" id="form_name1_3" style="display:none"><p>This cladogram includes the Smalltalk language designed by Alan Kay, Dan Ingalls and Adele Goldberg and its dialects Squeak (designed by Alan Kay, Dan Ingalls and Adele Golberg), Self (designed by David Ungar and Randall Smith) and NewtonScript (designed by Walter Smith at Apple and heavily influenced by Self). Smalltalk combined the conceptual framework of object-orientation (first described by the object-oriented Simula, see below) with the functional approach of Lisp. Smalltak, like Ruby (a modern language influenced by Smalltalk), inherited two of their most powerful features (i.e., code blocks and closures) from Lisp. Closures were invented by Peter J. Landin in 1964 and adopted later by Scheme in 1975. Smalltalk has been an important influence in more recent developments of functional languages including Etoys (also designed by Alan Kay and classified in the Logo family, see above) and Lisaac (designed by Benoit Sonntag and influenced by Self).</p></div>
+    
+<div class="show-hide" name="Scheme" id="form_name1_4" style="display:none"><p>This subtree includes the two main Lisp dialects, i.e., Scheme and Common Lisp. Scheme was designed by Guy L. Steele and Gerald Jay Sussman in 1975 and it is characterised by its minimalist design philosophy. The spread of many Lisp dialects in the 1970s lead to many compatibility problems. Common Lisp was created by the ANSI X3J13 committee in 1984 in order to remedy this situation. The design of Common Lisp is the combination of the many features coming from early Lisp dialects (including Scheme) into a single, rich-featured language. Common Lisp has not been very popular (unlike Scheme) perhaps because of its complexity. Although Common Lisp features have been imported to other languages, it has no descendants in this subtree. Another standardisation effort was EuLisp (1990), from an European consortium of industrial and academic partners.</p></div>
+
+<div class="show-hide" name="Ruby" id="form_name1_5" style="display:none"><p>
+Ruby was designed and developed in the 1990’s by Yukihiro Matsumoto in Japan. Although Ruby is regarded largely as an imperative language, it is a multi-paradigm language that combines elements of Perl, Smalltalk, Python, Lisp, Dylan, and CLU. All these ancestors have functional traits. For example, one of the most powerful Ruby features is the concept of ‘block’, which is the equivalent of Lisp closures. Dialects of Ruby include Interactive Ruby Shell, Fancy (an object-oriented language influenced by Ruby and Smalltalk) and Reia (discontinued).</p></div>
+
+<!--- Imperative --->    
+    
+<div class="show-hide" name="Imperative" id="form_name2" style="display:none">
+<p>The tree rooted in Speedcoding (the ancestor of Fortran) represents the largest group of languages in our dataset. The imperative backbone accepts a natural division in two coherent subtrees: many languages in the same subtree display common traits, i.e., structured programming (on the left) or object-oriented programming (on the right). This tree maps important innovations in the history of programming languages, which are associated to (1) the decoupling of software and hardware and (2) the transition from special-purpose languages to general-purpose, high-level languages.</p></div>
+    
+<div class="show-hide" name="ISWIM" id="form_name2_1" style="display:none"><p>
+An important subset of functional languages including ML, Clojure, OCaml, Haskell and F# appears here because the imperative ISWIM (an Algol-derived language including many functional elements) was a strong influence. For example, ML is a functional language with a syntax that closely follows the imperative paradigm.
+    </p></div>
+
+<div class="show-hide" name="JOSS" id="form_name2_2" style="display:none"><p>
+The roots of the personal computing revolution can be traced to the time-sharing tech- nology and the associated language JOSS (acronym for JOHNNIAC Open Shop systems). In the 1960s, computers were very expensive machines and they have to be shared among many users by means of time-sharing. JOSS was one of the first interactive languages designed by Cliff Shaw at RAND in 1966. JOSS influenced other time-sharing languages: TELCOMP (used in a commercial timesharing service by BBN in 1965), MUMPS (acronym for Massachusetts General Hospital Utility Multi-Programming System, 1966), and FOCAL (a language very similar to JOSS and designed by Richard Merrill in 1968).</p></div>
+    
+<div class="show-hide" name="Algol" id="form_name2_3" style="display:none"><p> 
+This subtree captures the initial explosion of PL diversity. During 1956 and 1957, a programming revolution began. This early period was characterised by an explosion of PL diversity: almost every new computer was accompanied by its own specific language or dialect of a previous language. However, the strong hardware-software coupling means that many of these designs are now extinct because they belong to obsolete computer architectures. Fortran (designed by John Backus in 1957) was the first successful attempt to liberate programmers from the clumsiness of specific hardware details. </p>
+<p>Fortran increased programmers’ efficiency by focusing in high-level algorithmic issues. And very soon, many followers imitated (and adapted) Fortran innovations. For example, over 200 high-level languages were developed between 1952 and 1972. In 1958, an international consortium of computer experts recognised the need for unifying this artificial ‘Tower of Babel’ in a universal, standardised approach for communicating software among users and computers. This committee created the language IAL (or International Algebraic Language), and which latter was renamed to Algol (for Algorithmic language), in an effort to design a language that included key programming innovations. The efforts of this consortium lead to several versions of elegant languages, each with more features than its predecessors, i.e., Algol-58 (1958), Algol-60 (1960) and Algol-68 (1968). And although the Algol family was never highly popular among programmers, its innovations were adopted by many imperative languages (this pattern is consistent with their large "offspring").</p></div>
+    
+<div class="show-hide" name="Pascal" id="form_name2_4" style="display:none"><p> 
+The innovations introduced by Algol made the complexity of programming manageable, e.g., structured programming allows programmers to decompose any complex task in a number of simpler sub-tasks and so on. These innovations were further extended by the last member of the family released in 1968. However, the high degree of complexity associated to Algol-68 discouraged many programmers. Competition and extinction are common patterns in the history of programming languages: high complexity of known languages yields to new, simpler approaches. Programming languages without significant community support tend to experience less development and they have an increased risk of abandonment. For example, the language Pascal (developed by Niklaus Wirth) was a simplified design of Algol-60. Pascal and its dialects Modula/Modula-2 (also created in 1978-1985 by Niklaus Wirth) were very successful and widely used (in particular for teaching programming). Wirth also developed Algol-W, Oberon (an extension to Algol-60), Oberon-2 and Oberon-07. However, like its predecessor Algol, the language Pascal (and its offspring) was be replaced by a stronger competitor: the C programming language. In 1972, the emergence of C and Unix (and the downfall of the Pascal family) signals the transition from early imperative languages to modern imperative languages. </p></div>
+    
+<div class="show-hide" name="C" id="form_name2_5" style="display:none"><p>
+    Computer technology has evolved to be easier for people to use. The evolution of modern languages has a strong social component and the success of programming languages is not always related to specific language innovations. Historical accidents, like in biology, have played an important role. An interesting example is the language C, one of the most successful languages in history. Large parts of the Unix operating system were rewritten in C during the 1970s. Although C was simultaneously efficient (the design of C was influenced by Fortran) and expressive (C inherited features of Algol-68), it was not the best design at the time. Much more important was the decision of developing a successful operating system (Unix) with a high-level programming language that was not tied to any specific hardware platform. This made Unix much easier to implement for different computers. Previous operating systems were developed with low-level languages and they were much more difficult to port to other platforms. Ease of portability increased the adoption and diffusion rates of Unix in communities of programmers, which in turn learned its programming environment, i.e., the C language. That is, language and operating system co-evolved together and increased their spread and cultural diffusion. Today C is one of the most popular languages and many software developments take place in C or in one of its derivatives.</p><p>Although C is a general-purpose, imperative language, many descendants are multi-paradigm. The coexistence of several paradigms in the same language enables programmers to pick the most adequate technique in every situation. An example is the language C++ (initially named as ‘C with classes’) which combines the imperative nature of its ancestor C with the object-oriented (OO) paradigm of Simula. Moreover, the OO paradigm is a common trait shared by imperative and functional languages (i.e., Smalltalk). The presence of analogous structures in different programming styles suggests that OO is an interesting example of convergent evolution in technology.</p>
+    </div>
+    
+<!--- Other --->
+    
+<div class="show-hide" name="Array" id="form_name3" style="display:none"><p>
+Array programming defines high-level operations that apply at once to an entire collection of values (e.g., matrix and vector operations). This enables programmers to express complex calculations in a more concise and elegant way than using the imperative paradigm Canonical examples of array languages include APL and J. These languages have a natural application in scientific and engineering settings. Examples in this category include: S (a statistical programming language), SAC (numerical applications and efficient array processing), Mathematica and MATLAB. Many other languages have extended their functions with array operations. For example, Perl Data Language (1996) provides a number of array programming extensions to the Perl programming language. Another example is the Hartmann pipeline, a data flow language strongly influenced by APL, which extended pipeline programming (Unix) to allow complex data processing.
+</p></div>
+    
+<div class="show-hide" name="Business" id="form_name4" style="display:none"><p>
+These languages have been designed (or have specific traits) for business applications. Flow-matic (originally B-0 or Business Language version 0) developed by Grace Hopper was the first data processing language designed for business. The focus of business languages is on readability by customers and they use English-like expression instead of machine-oriented syntax. Flow-matic was an important influence in the design of COBOL (Common Business-Oriented Language, 1959), a standardised language widely used in business, finance and administration. The Gartner Group estimated that, in 1997, about 80 percent of business applications run on Cobol, amounting to more than 200 billion lines of code, with 5 billion new lines of code created each year.</p>
+<p>This huge success of COBOL contrasts with the small number of descendants in the cladogram. Perhaps this phenomenon can be explained by the isolation of the COBOL community from the computer science community. Like other languages designed by consortiums (e.g., PL/I and Algol), COBOL was designed by a group of professionals (i.e., the CODASYL consortium) in an effort to create a common, hardware-independent language that decreased the huge costs of data processing in the business environment. No academic computer scientist participated in the design of COBOL. Computer scientists at that time were much more interested in other domains. Moreover, they perceived COBOL as an example of poor, obsolete design.</p>
+<p>External factors other than specific language characteristics (e.g., business orientation) determine the adoption of PLs, like their exploitation by other communities of practice. For example, the English-like syntax of business languages was inherited by the special-purpose language Tutor (also known as PLATO Author Language[17]). Tutor was initially developed by the University of Illinois at Urbana Champaign to facilitate computer assisted instruction (CAI) and later evolved into a general-purpose language because of the added degree of expressiveness,    
+</p></div>
+    
+<div class="show-hide" name="Logic" id="form_name5" style="display:none"><p>
+Languages in this subtree can be associated with the paradigm of logic programming. This is an important subclass of declarative languages that has its roots in first-order logic. Logic programming does not express algorithms as a collection of procedures or functions but as logical statements. Conceptually, the declarative approach is very different from the imperative approach because the programmer specifies what, not how, she wants to achieve with the computer. Prolog (1972) was one of the first logic languages and remains one of the most popular logic languages to this day. Prolog descendants have been used in many different application domains: Visual Prolog (an object-oriented extension of Prolog), Mercury (a subset of Prolog aimed to develop real-world applications), CLACL (a logic language used in creative fields like music and design) and Datalog (a subset of Prolog used as a query language).
+</p></div>
+
+<div class="show-hide" name="Definition" id="form_name6" style="display:none"><p>
+These languages represent a very different class of languages that cannot be strictly classified neither as imperative nor functional. Instead of describing an algorithm or a function, definition languages describe data structures. HTML (HyperText Markup Language) is one of the most popular examples in this class because HTML is used to create web pages. IBM’s Generalized Markup Language (GML) is the root of this subtree, which was developed during the early 1970s. Using GML, the different parts (paragraphs, headers, tables, etc) of text documents are ’marked up’ using tags. GML is a (so-called) document markup language, i.e., a language that enables the formatting and layout of documents in a way like the handwritten annotations added to a manuscript by a copy editor. Unlike GML and LaTeX, SGML (Standard Generalized Markup Language, 1986) is a standardised meta-language that can be used to define the rules followed by an arbitrary markup language. SGML is the basis for two popular markup languages: HTML and XML (1998). HTML and XML are subsets of SGML having with different goals. HTML tags are predefined by the HTML language. In SGML and XML, we can use arbitrary tags to describe the relationship between content and structure. This added flexibility means that XML can replace HTML in the future as the markup language for the Web. This trend is consistent with the asymmetry of this subtree: the XML branch appears to be more developed than the HTML branch.</p></div>
+</div>
+    
+    
+    <!--- 
+var options = {
+            // position: {x:positionx,y:positiony}, // this is not relevant when focusing on nodes
+            scale: 1,
+            offset: {x:0,y:0},
+            animation: {
+                duration: 100,
+                easingFunction: "easeInOutCubic"
+            }
+        }
+vis.Network.focusOnNode(10, options);
+--->    
+    
+<script type ="text/javascript">
+   var options={
+        height:'700px',
+        stabilize: true,
+        width:  '100%',
+       dragNetwork : true,
+       nodes:    {
+            shape: 'dot',
+            radius:1.25,
+            fontColor:'#ffffff',
+            borderWidth:0.01,
+            fontSize: 2.2,
+        },
+        edges: {
+            color: 'lightblue',
+            width: 0.3,
+        },
+        smoothCurves: {dynamic:false, type: "continuous"},
+        stabilize: false,
+
+         physics: {
+             barnesHut: {
+                enabled: true,
+                 gravitationalConstant: -2000,
+                centralGravity: 0.1,
+                 springLength: 95,
+                 springConstant: 0.04,
+                damping: 0.09
+            }
+         },
+         navigation: false,
+           keyboard: true,
+         keyboard: {
+             speed: {
+            x: 10,
+            y: 10,
+            zoom: 0.01
+            },
+            bindToWindow: true
+        },
+        hideEdgesOnDrag: false
+  };
+var nodes=[
+{id:1, label:'fortran', group:'g1', x:258.665344, y:205.316452},
+{id:2, label:'speedcoding', group:'g1', x:256.881134, y:230.511459},
+{id:3, label:'flpl', group:'g1', x:252.313278, y:168.693604},
+{id:4, label:'comtran', group:'g1', x:205.892212, y:356.930542},
+{id:5, label:'flow-matic', group:'g1', x:205.123993, y:340.076324},
+{id:6, label:'lisp', group:'g1', x:97.669983, y:357.864319},
+{id:7, label:'ipl', group:'g1', x:70.760811, y:342.605560},
+{id:8, label:'algol_58', group:'g1', x:207.427795, y:203.361008},
+{id:9, label:'trac', group:'g1', x:70.643036, y:358.828735},
+{id:10, label:'cobol', group:'g1', x:207.660431, y:323.076324},
+{id:11, label:'ibm_rpg', group:'g1', x:374.005646, y:354.886993},
+{id:12, label:'fargo', group:'g1', x:372.427124, y:338.546661},
+{id:13, label:'algol_60', group:'g1', x:156.662766, y:205.605164},
+{id:14, label:'jovial', group:'g1', x:210.592682, y:221.698456},
+{id:15, label:'snobol', group:'g1', x:259.184784, y:182.925308},
+{id:16, label:'joss', group:'g1', x:210.862396, y:180.786682},
+{id:17, label:'cpl', group:'g1', x:140.375198, y:175.916000},
+{id:18, label:'basic', group:'g1', x:228.531235, y:140.361191},
+{id:19, label:'pl/i', group:'g1', x:126.746529, y:180.844772},
+{id:20, label:'cowsel', group:'g1', x:133.403671, y:147.758362},
+{id:21, label:'telcomp', group:'g1', x:195.896912, y:153.102692},
+{id:22, label:'bcpl', group:'g1', x:141.375198, y:156.330063},
+{id:23, label:'mumps', group:'g1', x:206.956482, y:144.660141},
+{id:24, label:'ml/i', group:'g1', x:247.224716, y:425.116791},
+{id:25, label:'gpm', group:'g1', x:234.224716, y:435.116791},
+{id:26, label:'iswim', group:'g1', x:115.777756, y:192.311218},
+{id:27, label:'algol_w', group:'g1', x:122.582901, y:229.597076},
+{id:28, label:'refal', group:'g1', x:83.488037, y:331.583496},
+{id:29, label:'xpl', group:'g1', x:106.288795, y:151.086960},
+{id:30, label:'simula', group:'g1', x:158.336609, y:176.440826},
+{id:31, label:'logo', group:'g1', x:123.670288, y:381.822571},
+{id:32, label:'reduce', group:'g1', x:123.407104, y:366.967285},
+{id:33, label:'macsyma', group:'g1', x:123.468132, y:345.813629},
+{id:34, label:'pop-1', group:'g1', x:131.975372, y:137.115448},
+{id:35, label:'ttm', group:'g1', x:235.224716, y:451.116791},
+{id:36, label:'focal', group:'g1', x:237.960770, y:152.058014},
+{id:37, label:'algol_68', group:'g1', x:148.187225, y:228.077774},
+{id:38, label:'edinburgh_imp', group:'g1', x:117.485008, y:216.603973},
+{id:39, label:'b', group:'g1', x:116.403687, y:153.401291},
+{id:40, label:'ibm_rpg_ii', group:'g1', x:371.620422, y:374.878296},
+{id:41, label:'tutor', group:'g1', x:226.381989, y:308.599670},
+{id:42, label:'bliss', group:'g1', x:137.173431, y:223.032257},
+{id:43, label:'pop-2', group:'g1', x:169.265335, y:219.675201},
+{id:44, label:'pascal', group:'g1', x:103.752930, y:246.183548},
+{id:45, label:'dibol', group:'g1', x:200.698029, y:130.279968},
+{id:46, label:'sue', group:'g1', x:94.040146, y:229.116074},
+{id:47, label:'mdl', group:'g1', x:132.672760, y:364.262299},
+{id:48, label:'forth', group:'g1', x:124.688736, y:338.753937},
+{id:49, label:'smalltalk', group:'g1', x:72.160744, y:391.966156},
+{id:50, label:'sasl', group:'g1', x:96.297058, y:201.766205},
+{id:51, label:'c', group:'g1', x:323.309967, y:209.736130},
+{id:52, label:'exec_2', group:'g1', x:400.745544, y:417.840515},
+{id:53, label:'cms_exec', group:'g1', x:416.745544, y:418.840515},
+{id:54, label:'pl/c', group:'g1', x:124.253647, y:153.029968},
+{id:55, label:'comal', group:'g1', x:261.400665, y:133.109146},
+{id:56, label:'ml', group:'g1', x:89.777756, y:179.311218},
+{id:57, label:'sp/k', group:'g1', x:101.081764, y:163.208511},
+{id:58, label:'clu', group:'g1', x:89.921165, y:322.325439},
+{id:59, label:'grass', group:'g1', x:228.014725, y:116.799835},
+{id:60, label:'scheme', group:'g1', x:57.242844, y:344.253174},
+{id:61, label:'mapper', group:'g1', x:404.590332, y:338.021088},
+{id:62, label:'crt_rps', group:'g1', x:420.590332, y:339.021088},
+{id:63, label:'sl5', group:'g1', x:258.320801, y:159.515686},
+{id:64, label:'euclid', group:'g1', x:118.011841, y:274.658813},
+{id:65, label:'modula', group:'g1', x:76.568489, y:261.719025},
+{id:66, label:'plus', group:'g1', x:79.632317, y:233.942413},
+{id:67, label:'lucid', group:'g1', x:104.868752, y:208.805725},
+{id:68, label:'mesa', group:'g1', x:80.213875, y:266.591370},
+{id:69, label:'s', group:'g1', x:197.535309, y:413.587585},
+{id:70, label:'apl', group:'g1', x:189.360718, y:390.561981},
+{id:71, label:'awk', group:'g1', x:304.389099, y:255.819611},
+{id:72, label:'m4', group:'g1', x:220.224716, y:426.116791},
+{id:73, label:'datalog', group:'g1', x:190.382217, y:272.032928},
+{id:74, label:'prolog', group:'g1', x:214.916962, y:266.367493},
+{id:75, label:'idl', group:'g1', x:244.171326, y:172.464142},
+{id:76, label:'bourne_shell', group:'g1', x:150.024994, y:247.558472},
+{id:77, label:'ops5', group:'g1', x:112.437347, y:338.391571},
+{id:78, label:'fp', group:'g1', x:215.059082, y:402.576599},
+{id:79, label:'icon', group:'g1', x:165.889435, y:236.104431},
+{id:80, label:'matlab', group:'g1', x:238.390747, y:181.481216},
+{id:81, label:'ucsd_pascal', group:'g1', x:124.228165, y:268.821869},
+{id:82, label:'communicating_sequential_processes', group:'g1', x:147.628418, y:146.193573},
+{id:83, label:'zgrass', group:'g1', x:220.918961, y:105.799843},
+{id:84, label:'c_shell', group:'g1', x:318.759583, y:169.016891},
+{id:85, label:'ibm_rpg_iii', group:'g1', x:371.096893, y:393.695068},
+{id:86, label:'modula-2', group:'g1', x:81.635895, y:274.633942},
+{id:87, label:'zil', group:'g1', x:147.148148, y:367.180359},
+{id:88, label:'val', group:'g1', x:79.931892, y:307.150452},
+{id:89, label:'sql', group:'g1', x:397.187256, y:288.040833},
+{id:90, label:'sequel', group:'g1', x:413.255310, y:301.625916},
+{id:91, label:'rexx', group:'g1', x:114.803505, y:139.379456},
+{id:92, label:'symbolic_manipulation_program', group:'g1', x:47.861904, y:423.646057},
+{id:93, label:'schoonschip', group:'g1', x:49.940578, y:441.406982},
+{id:94, label:'fril', group:'g1', x:191.218582, y:254.509186},
+{id:95, label:'ada', group:'g1', x:76.036568, y:236.942413},
+{id:96, label:'hope', group:'g1', x:394.224457, y:436.307983},
+{id:97, label:'npl', group:'g1', x:414.516998, y:429.843475},
+{id:98, label:'maple_(software)', group:'g1', x:96.955055, y:278.318390},
+{id:99, label:'ddl', group:'g1', x:77.601105, y:377.567078},
+{id:100, label:'kent_recursive_calculator', group:'g1', x:74.049812, y:207.909592},
+{id:101, label:'t', group:'g1', x:65.408493, y:314.229309},
+{id:102, label:'postscript', group:'g1', x:154.633240, y:340.381104},
+{id:103, label:'turing', group:'g1', x:91.167809, y:267.137512},
+{id:104, label:'argus', group:'g1', x:96.156433, y:305.082062},
+{id:105, label:'objective-c', group:'g1', x:348.779663, y:229.083801},
+{id:106, label:'occam', group:'g1', x:135.474915, y:117.136345},
+{id:107, label:'sisal', group:'g1', x:272.875793, y:179.031998},
+{id:108, label:'miranda', group:'g1', x:84.673897, y:151.914612},
+{id:109, label:'korn_shell', group:'g1', x:298.831757, y:281.165283},
+{id:110, label:'abap', group:'g1', x:186.779984, y:306.513672},
+{id:111, label:'c++', group:'g1', x:392.924225, y:200.004440},
+{id:112, label:'standard_ml', group:'g1', x:76.881615, y:159.395325},
+{id:113, label:'orwell', group:'g1', x:81.200089, y:141.330048},
+{id:114, label:'form', group:'g1', x:50.787468, y:455.313660},
+{id:115, label:'rpl', group:'g1', x:155.420715, y:349.188202},
+{id:116, label:'progress_4gl', group:'g1', x:382.740417, y:302.625946},
+{id:117, label:'objvlisp', group:'g1', x:96.150749, y:330.571960},
+{id:118, label:'common_lisp', group:'g1', x:37.178406, y:362.952545},
+{id:119, label:'modula-2+', group:'g1', x:78.469208, y:240.917587},
+{id:120, label:'clipper', group:'g1', x:281.910187, y:251.908005},
+{id:121, label:'csound', group:'g1', x:319.327087, y:241.765869},
+{id:122, label:'max_(software)', group:'g1', x:421.900360, y:453.038391},
+{id:123, label:'music-n', group:'g1', x:405.900360, y:455.038391},
+{id:124, label:'clips', group:'g1', x:107.942146, y:330.759918},
+{id:125, label:'caml', group:'g1', x:67.368286, y:163.200455},
+{id:126, label:'ampl', group:'g1', x:288.114044, y:231.331833},
+{id:127, label:'gnu_bison', group:'g1', x:301.460876, y:425.116791},
+{id:128, label:'yacc', group:'g1', x:288.460876, y:435.116791},
+{id:129, label:'visual_prolog', group:'g1', x:235.611664, y:285.727631},
+{id:130, label:'oberon', group:'g1', x:68.153618, y:280.187134},
+{id:131, label:'clarion', group:'g1', x:232.382904, y:121.683495},
+{id:132, label:'erlang', group:'g1', x:228.957184, y:249.527466},
+{id:133, label:'oaklisp', group:'g1', x:26.943733, y:330.260010},
+{id:134, label:'hartmann_pipeline', group:'g1', x:206.059097, y:371.707306},
+{id:135, label:'corvision', group:'g1', x:154.174988, y:433.950043},
+{id:136, label:'inform_sis', group:'g1', x:151.632812, y:452.333374},
+{id:137, label:'eiffel', group:'g1', x:170.817307, y:156.570419},
+{id:138, label:'modula-3', group:'g1', x:82.479828, y:230.105530},
+{id:139, label:'autolisp', group:'g1', x:92.341965, y:378.577759},
+{id:140, label:'object_pascal', group:'g1', x:94.703308, y:271.392822},
+{id:141, label:'sgml', group:'g1', x:303.557281, y:353.338562},
+{id:142, label:'gml', group:'g1', x:313.899170, y:332.145691},
+{id:143, label:'self', group:'g1', x:58.967022, y:394.443604},
+{id:144, label:'abc', group:'g1', x:132.271317, y:244.558456},
+{id:145, label:'haskell', group:'g1', x:57.115067, y:180.077759},
+{id:146, label:'vhdl', group:'g1', x:76.189056, y:252.577179},
+{id:147, label:'joyce', group:'g1', x:74.199677, y:243.715469},
+{id:148, label:'clean', group:'g1', x:36.751091, y:199.773071},
+{id:149, label:'perl', group:'g1', x:302.475464, y:167.160065},
+{id:150, label:'tads', group:'g1', x:285.645020, y:209.800140},
+{id:151, label:'adl', group:'g1', x:105.313744, y:380.909790},
+{id:152, label:'a+', group:'g1', x:164.495071, y:385.387390},
+{id:153, label:'hamilton_c_shell', group:'g1', x:307.119751, y:151.005325},
+{id:154, label:'as/400_control_language', group:'g1', x:98.316582, y:171.519394},
+{id:155, label:'pl/sql', group:'g1', x:74.834450, y:255.935364},
+{id:156, label:'tcl', group:'g1', x:76.193672, y:336.109039},
+{id:157, label:'object_rexx', group:'g1', x:105.803505, y:131.379456},
+{id:158, label:'lingo', group:'g1', x:355.517700, y:423.686584},
+{id:159, label:'hypertalk', group:'g1', x:345.845093, y:435.350281},
+{id:160, label:'mathematica', group:'g1', x:124.414253, y:353.592773},
+{id:161, label:'vissim', group:'g1', x:343.904083, y:185.311234},
+{id:162, label:'fl', group:'g1', x:236.586517, y:412.922150},
+{id:163, label:'lpc', group:'g1', x:345.947906, y:234.420227},
+{id:164, label:'bash_(unix_shell)', group:'g1', x:321.332306, y:138.305481},
+{id:165, label:'newsqueak', group:'g1', x:332.867340, y:230.119415},
+{id:166, label:'muf', group:'g1', x:146.704346, y:312.071136},
+{id:167, label:'moo', group:'g1', x:357.620728, y:205.587723},
+{id:168, label:'html', group:'g1', x:322.059113, y:355.323914},
+{id:169, label:'sather', group:'g1', x:70.889359, y:317.586639},
+{id:170, label:'j', group:'g1', x:191.706253, y:366.529083},
+{id:171, label:'dylan', group:'g1', x:55.467209, y:313.318634},
+{id:172, label:'eulisp', group:'g1', x:35.842609, y:318.738403},
+{id:173, label:'oz', group:'g1', x:221.593384, y:291.564026},
+{id:174, label:'oberon-2', group:'g1', x:68.664398, y:285.665863},
+{id:175, label:'component_pascal', group:'g1', x:61.777756, y:295.945984},
+{id:176, label:'visual_basic', group:'g1', x:244.200302, y:118.818985},
+{id:177, label:'q_(equational_programming_language)', group:'g1', x:28.166536, y:184.980774},
+{id:178, label:'agentsheets', group:'g1', x:130.878250, y:400.515533},
+{id:179, label:'python', group:'g1', x:327.381226, y:259.589417},
+{id:180, label:'gnu_e', group:'g1', x:394.196869, y:178.974609},
+{id:181, label:'antlr', group:'g1', x:289.460876, y:451.116791},
+{id:182, label:'alef', group:'g1', x:300.654266, y:242.872070},
+{id:183, label:'colorforth', group:'g1', x:152.983765, y:323.851746},
+{id:184, label:'k', group:'g1', x:24.365164, y:350.863556},
+{id:185, label:'newtonscript', group:'g1', x:38.008484, y:400.074524},
+{id:186, label:'lua', group:'g1', x:400.877930, y:214.200134},
+{id:187, label:'r', group:'g1', x:22.674530, y:357.671112},
+{id:188, label:'false', group:'g1', x:151.735352, y:317.231873},
+{id:189, label:'brainfuck', group:'g1', x:184.768173, y:453.048889},
+{id:190, label:'p\'\'', group:'g1', x:184.848404, y:430.175720},
+{id:191, label:'beta', group:'g1', x:160.440445, y:152.479416},
+{id:192, label:'revolution', group:'g1', x:346.845093, y:451.350281},
+{id:193, label:'applescript', group:'g1', x:328.517700, y:424.686584},
+{id:194, label:'split-c', group:'g1', x:316.406952, y:249.438705},
+{id:195, label:'superpascal', group:'g1', x:153.196655, y:118.093613},
+{id:196, label:'aimms', group:'g1', x:409.308624, y:362.578522},
+{id:197, label:'general_algebraic_modeling_system', group:'g1', x:403.310791, y:387.367828},
+{id:198, label:'visual_basic_for_applications', group:'g1', x:259.951447, y:103.799843},
+{id:199, label:'zpl', group:'g1', x:354.833130, y:190.073868},
+{id:200, label:'inform', group:'g1', x:331.902985, y:235.676804},
+{id:201, label:'cilk', group:'g1', x:356.133911, y:213.623352},
+{id:202, label:'ibm_rpg_iv', group:'g1', x:412.806335, y:273.249420},
+{id:203, label:'sac_programming_language', group:'g1', x:163.153214, y:400.903839},
+{id:204, label:'racket', group:'g1', x:25.592621, y:337.079285},
+{id:205, label:'pike', group:'g1', x:360.329834, y:198.853592},
+{id:206, label:'metapost', group:'g1', x:126.725906, y:433.858643},
+{id:207, label:'metafont', group:'g1', x:125.725906, y:449.858643},
+{id:208, label:'gofer', group:'g1', x:45.173424, y:205.117294},
+{id:209, label:'jess', group:'g1', x:112.208435, y:310.161743},
+{id:210, label:'coldfusion', group:'g1', x:336.557251, y:363.338562},
+{id:211, label:'ruby', group:'g1', x:99.537506, y:396.108459},
+{id:212, label:'limbo', group:'g1', x:353.133911, y:218.384583},
+{id:213, label:'mercury', group:'g1', x:243.291748, y:271.382111},
+{id:214, label:'obliq', group:'g1', x:45.727245, y:280.183044},
+{id:215, label:'gnu_guile', group:'g1', x:48.400337, y:359.275696},
+{id:216, label:'php', group:'g1', x:458.136169, y:214.536163},
+{id:217, label:'java', group:'g1', x:439.095642, y:201.727448},
+{id:218, label:'algebraic_logic_functional', group:'g1', x:201.229568, y:241.829102},
+{id:219, label:'hugo', group:'g1', x:219.712784, y:120.431648},
+{id:220, label:'ada_95', group:'g1', x:385.781189, y:221.944748},
+{id:221, label:'javascript', group:'g1', x:348.672668, y:173.628311},
+{id:222, label:'escher', group:'g1', x:28.237759, y:180.616821},
+{id:223, label:'starlogo', group:'g1', x:143.057968, y:379.611694},
+{id:224, label:'perl_data_language', group:'g1', x:215.735504, y:386.565613},
+{id:225, label:'ibm_netrexx', group:'g1', x:107.160576, y:159.687149},
+{id:226, label:'pure_data', group:'g1', x:388.900360, y:455.038391},
+{id:227, label:'metaocaml', group:'g1', x:60.206062, y:155.382446},
+{id:228, label:'xml', group:'g1', x:284.557281, y:352.338562},
+{id:229, label:'squeak', group:'g1', x:65.516304, y:411.654968},
+{id:230, label:'supercollider', group:'g1', x:330.026978, y:247.827896},
+{id:231, label:'charm_(language)', group:'g1', x:298.486053, y:235.093048},
+{id:232, label:'vbscript', group:'g1', x:242.774643, y:98.645195},
+{id:233, label:'lasso', group:'g1', x:324.542633, y:376.516815},
+{id:234, label:'javacc', group:'g1', x:274.460876, y:426.116791},
+{id:235, label:'ocaml', group:'g1', x:67.732262, y:145.213333},
+{id:236, label:'jscript', group:'g1', x:341.985870, y:145.981644},
+{id:237, label:'interactive_ruby_shell', group:'g1', x:93.706520, y:420.220154},
+{id:238, label:'etoys', group:'g1', x:139.812775, y:386.497009},
+{id:239, label:'ecmascript', group:'g1', x:438.286560, y:241.511612},
+{id:240, label:'c--', group:'g1', x:326.203766, y:180.401031},
+{id:241, label:'pico', group:'g1', x:46.794350, y:314.681732},
+{id:242, label:'rebol', group:'g1', x:153.104080, y:332.297424},
+{id:243, label:'free_pascal', group:'g1', x:105.767136, y:268.314789},
+{id:244, label:'tea', group:'g1', x:436.009552, y:175.152802},
+{id:245, label:'alma-0', group:'g1', x:84.033615, y:281.822906},
+{id:246, label:'e', group:'g1', x:437.095642, y:229.656921},
+{id:247, label:'curry', group:'g1', x:46.874718, y:154.486298},
+{id:248, label:'actionscript', group:'g1', x:468.609100, y:196.123993},
+{id:249, label:'microsoft_dynamics_ax', group:'g1', x:408.203949, y:179.822128},
+{id:250, label:'co-array_fortran', group:'g1', x:227.647232, y:190.655212},
+{id:251, label:'vvvv', group:'g1', x:175.847916, y:371.369080},
+{id:252, label:'unrealscript', group:'g1', x:427.356628, y:168.287827},
+{id:253, label:'cel_(programming_language)', group:'g1', x:124.248337, y:301.166229},
+{id:254, label:'curl', group:'g1', x:333.051758, y:340.465607},
+{id:255, label:'harbour_(software)', group:'g1', x:269.679993, y:271.704834},
+{id:256, label:'perl_shell', group:'g1', x:290.479095, y:145.944214},
+{id:257, label:'xpath', group:'g1', x:250.051788, y:362.844055},
+{id:258, label:'xslt', group:'g1', x:266.557281, y:358.338562},
+{id:259, label:'bistro', group:'g1', x:469.066040, y:211.852859},
+{id:260, label:'game_maker_language', group:'g1', x:295.043427, y:185.206436},
+{id:261, label:'netlogo', group:'g1', x:136.601257, y:395.310699},
+{id:262, label:'autoit', group:'g1', x:245.285706, y:124.854317},
+{id:263, label:'unified_parallel_c', group:'g1', x:288.707031, y:213.968353},
+{id:264, label:'gambas', group:'g1', x:228.070633, y:98.374184},
+{id:265, label:'high_level_assembly', group:'g1', x:126.416458, y:261.034760},
+{id:266, label:'clacl', group:'g1', x:200.727753, y:288.225830},
+{id:267, label:'alice', group:'g1', x:76.777756, y:179.311218},
+{id:268, label:'webmethods_flow', group:'g1', x:462.669067, y:181.967789},
+{id:269, label:'join_java', group:'g1', x:462.035645, y:229.486282},
+{id:270, label:'beanshell', group:'g1', x:470.387817, y:202.048813},
+{id:271, label:'xl', group:'g1', x:382.263519, y:183.523407},
+{id:272, label:'aspectj', group:'g1', x:467.684265, y:190.701706},
+{id:273, label:'pizza', group:'g1', x:426.381989, y:225.064026},
+{id:274, label:'joy', group:'g1', x:300.592255, y:179.445221},
+{id:275, label:'generic_java', group:'g1', x:413.621918, y:192.469513},
+{id:276, label:'visual_basic_.net', group:'g1', x:256.188538, y:97.951523},
+{id:277, label:'processing', group:'g1', x:467.769592, y:216.234634},
+{id:278, label:'frink', group:'g1', x:418.969025, y:185.032043},
+{id:279, label:'metal', group:'g1', x:287.560913, y:327.472931},
+{id:280, label:'c_sharp', group:'g1', x:410.360107, y:224.958435},
+{id:281, label:'d', group:'g1', x:459.236694, y:189.249039},
+{id:282, label:'gamemonkey_script', group:'g1', x:353.463196, y:183.500839},
+{id:283, label:'openlaszlo', group:'g1', x:265.691620, y:332.480225},
+{id:284, label:'xquery', group:'g1', x:247.702621, y:344.483887},
+{id:285, label:'io', group:'g1', x:69.026207, y:353.548218},
+{id:286, label:'q_(programming_language_from_kx_systems)', group:'g1', x:21.924818, y:367.480255},
+{id:287, label:'relax_ng', group:'g1', x:286.728210, y:376.204224},
+{id:288, label:'autohotkey', group:'g1', x:206.790817, y:124.892624},
+{id:289, label:'squirrel', group:'g1', x:336.736450, y:153.374832},
+{id:290, label:'falcon', group:'g1', x:108.567139, y:376.372681},
+{id:291, label:'chuck', group:'g1', x:352.664917, y:195.286240},
+{id:292, label:'scala', group:'g1', x:419.648041, y:232.084274},
+{id:293, label:'lisaac', group:'g1', x:57.641418, y:407.708405},
+{id:294, label:'factor', group:'g1', x:139.017807, y:307.167725},
+{id:295, label:'goo', group:'g1', x:23.286545, y:342.841400},
+{id:296, label:'groovy', group:'g1', x:464.156433, y:221.229584},
+{id:297, label:'c_omega', group:'g1', x:411.912506, y:240.511627},
+{id:298, label:'boo', group:'g1', x:326.611420, y:281.855255},
+{id:299, label:'nemerle', group:'g1', x:87.430367, y:382.377167},
+{id:300, label:'little_b', group:'g1', x:125.000504, y:358.344238},
+{id:301, label:'epigram', group:'g1', x:39.244659, y:156.382446},
+{id:302, label:'cal_(quark_framework)#cal', group:'g1', x:21.607710, y:169.402206},
+{id:303, label:'x10', group:'g1', x:450.095642, y:227.656921},
+{id:304, label:'kaya', group:'g1', x:31.478113, y:175.214249},
+{id:305, label:'fantom', group:'g1', x:468.669067, y:207.355408},
+{id:306, label:'ada_2005', group:'g1', x:452.829620, y:235.601990},
+{id:307, label:'seed7', group:'g1', x:73.894707, y:248.573608},
+{id:308, label:'candle', group:'g1', x:260.728210, y:377.356842},
+{id:309, label:'eel_(extensible_embeddable_language)', group:'g1', x:349.814484, y:210.029831},
+{id:310, label:'oxygene', group:'g1', x:399.153229, y:238.687302},
+{id:311, label:'xc', group:'g1', x:288.069824, y:199.702499},
+{id:312, label:'f_sharp', group:'g1', x:32.062672, y:191.487228},
+{id:313, label:'scratch', group:'g1', x:126.344498, y:407.738251},
+{id:314, label:'windows_powershell', group:'g1', x:377.019257, y:273.077057},
+{id:315, label:'minid', group:'g1', x:355.674164, y:144.076340},
+{id:316, label:'progress_4gl_10.1', group:'g1', x:368.880951, y:318.315277},
+{id:317, label:'cobra', group:'g1', x:338.151733, y:281.005646},
+{id:318, label:'optimj', group:'g1', x:422.667480, y:217.827545},
+{id:319, label:'hop_(software)', group:'g1', x:27.833355, y:324.891846},
+{id:320, label:'cyclone', group:'g1', x:333.391785, y:177.133331},
+{id:321, label:'vala', group:'g1', x:428.778931, y:237.194916},
+{id:322, label:'f-script', group:'g1', x:179.513367, y:412.420319},
+{id:323, label:'lolpython', group:'g1', x:312.522400, y:280.474640},
+{id:324, label:'qore', group:'g1', x:444.412384, y:169.705978},
+{id:325, label:'clojure', group:'g1', x:237.957199, y:259.043915},
+{id:326, label:'nu', group:'g1', x:75.053146, y:372.303650},
+{id:327, label:'pure', group:'g1', x:12.939049, y:187.851212},
+{id:328, label:'pcastl', group:'g1', x:289.149628, y:220.897781},
+{id:329, label:'ioke', group:'g1', x:69.680420, y:364.624084},
+{id:330, label:'reia', group:'g1', x:112.957306, y:413.642731},
+{id:331, label:'mirah', group:'g1', x:415.184509, y:209.958099},
+{id:332, label:'objective-j', group:'g1', x:367.136139, y:153.125397},
+{id:333, label:'opencl', group:'g1', x:348.443237, y:222.490784},
+{id:334, label:'genie', group:'g1', x:348.886505, y:274.014160},
+{id:335, label:'coffeescript', group:'g1', x:35.900452, y:161.025375},
+{id:336, label:'go', group:'g1', x:294.424072, y:192.879288},
+{id:337, label:'opa', group:'g1', x:369.528748, y:159.148514},
+{id:338, label:'rust', group:'g1', x:99.880432, y:414.442780},
+{id:339, label:'ateji_px', group:'g1', x:450.904785, y:182.932327},
+{id:340, label:'fancy', group:'g1', x:81.023094, y:414.829529},
+{id:341, label:'fortress', group:'g1', x:267.558838, y:170.382004},
+{id:342, label:'fpr', group:'g1', x:117.279053, y:370.836121},
+{id:343, label:'obix_programming_language', group:'g1', x:452.638702, y:174.334351},
+{id:344, label:'luna', group:'g1', x:359.113037, y:149.744339},
+{id:345, label:'thinbasic', group:'g1', x:254.350525, y:127.469955},
+{id:346, label:'dart', group:'g1', x:445.015381, y:235.199982},
+{id:347, label:'typescript', group:'g1', x:409.988464, y:203.249039},
+];
+var edges=[
+{from:1, to:2},
+{from:3, to:1},
+{from:4, to:5},
+{from:6, to:7},
+{from:8, to:1},
+{from:9, to:6},
+{from:10, to:5},
+{from:11, to:12},
+{from:13, to:8},
+{from:14, to:8},
+{from:15, to:1},
+{from:16, to:8},
+{from:17, to:13},
+{from:18, to:16},
+{from:19, to:13},
+{from:20, to:17},
+{from:21, to:16},
+{from:22, to:17},
+{from:23, to:16},
+{from:24, to:25},
+{from:26, to:13},
+{from:27, to:13},
+{from:28, to:6},
+{from:29, to:19},
+{from:30, to:13},
+{from:31, to:6},
+{from:32, to:6},
+{from:33, to:6},
+{from:34, to:20},
+{from:35, to:25},
+{from:36, to:16},
+{from:37, to:13},
+{from:38, to:13},
+{from:39, to:19},
+{from:40, to:11},
+{from:41, to:10},
+{from:42, to:13},
+{from:43, to:13},
+{from:44, to:27},
+{from:45, to:18},
+{from:46, to:44},
+{from:47, to:6},
+{from:48, to:6},
+{from:49, to:6},
+{from:50, to:26},
+{from:51, to:1},
+{from:52, to:53},
+{from:54, to:19},
+{from:55, to:18},
+{from:56, to:26},
+{from:57, to:19},
+{from:58, to:6},
+{from:59, to:18},
+{from:60, to:6},
+{from:61, to:62},
+{from:63, to:15},
+{from:64, to:44},
+{from:65, to:44},
+{from:66, to:44},
+{from:67, to:26},
+{from:68, to:44},
+{from:69, to:70},
+{from:71, to:51},
+{from:72, to:25},
+{from:73, to:74},
+{from:75, to:1},
+{from:76, to:37},
+{from:77, to:6},
+{from:78, to:70},
+{from:79, to:13},
+{from:80, to:1},
+{from:81, to:44},
+{from:82, to:30},
+{from:83, to:59},
+{from:84, to:51},
+{from:85, to:40},
+{from:86, to:44},
+{from:87, to:47},
+{from:88, to:58},
+{from:89, to:90},
+{from:91, to:19},
+{from:92, to:93},
+{from:94, to:74},
+{from:95, to:44},
+{from:96, to:97},
+{from:98, to:44},
+{from:99, to:6},
+{from:100, to:50},
+{from:101, to:60},
+{from:102, to:48},
+{from:103, to:44},
+{from:104, to:58},
+{from:105, to:51},
+{from:106, to:82},
+{from:107, to:1},
+{from:108, to:56},
+{from:109, to:71},
+{from:110, to:10},
+{from:111, to:51},
+{from:112, to:56},
+{from:113, to:108},
+{from:114, to:93},
+{from:115, to:48},
+{from:116, to:89},
+{from:117, to:6},
+{from:118, to:60},
+{from:119, to:44},
+{from:120, to:51},
+{from:121, to:51},
+{from:122, to:123},
+{from:124, to:6},
+{from:125, to:56},
+{from:126, to:51},
+{from:127, to:128},
+{from:129, to:74},
+{from:130, to:86},
+{from:131, to:18},
+{from:132, to:74},
+{from:133, to:60},
+{from:134, to:70},
+{from:135, to:136},
+{from:137, to:30},
+{from:138, to:44},
+{from:139, to:6},
+{from:140, to:44},
+{from:141, to:142},
+{from:143, to:49},
+{from:144, to:37},
+{from:145, to:56},
+{from:146, to:44},
+{from:147, to:44},
+{from:148, to:145},
+{from:149, to:51},
+{from:150, to:51},
+{from:151, to:6},
+{from:152, to:70},
+{from:153, to:84},
+{from:154, to:19},
+{from:155, to:44},
+{from:156, to:6},
+{from:157, to:91},
+{from:158, to:159},
+{from:160, to:6},
+{from:161, to:51},
+{from:162, to:78},
+{from:163, to:51},
+{from:164, to:84},
+{from:165, to:51},
+{from:166, to:48},
+{from:167, to:51},
+{from:168, to:141},
+{from:169, to:60},
+{from:170, to:70},
+{from:171, to:60},
+{from:172, to:60},
+{from:173, to:74},
+{from:174, to:130},
+{from:175, to:174},
+{from:176, to:18},
+{from:177, to:145},
+{from:178, to:31},
+{from:179, to:51},
+{from:180, to:111},
+{from:181, to:128},
+{from:182, to:51},
+{from:183, to:48},
+{from:184, to:60},
+{from:185, to:143},
+{from:186, to:111},
+{from:187, to:60},
+{from:188, to:48},
+{from:189, to:190},
+{from:191, to:30},
+{from:192, to:159},
+{from:193, to:159},
+{from:194, to:51},
+{from:195, to:82},
+{from:196, to:197},
+{from:198, to:176},
+{from:199, to:51},
+{from:200, to:51},
+{from:201, to:51},
+{from:202, to:89},
+{from:203, to:70},
+{from:204, to:60},
+{from:205, to:51},
+{from:206, to:207},
+{from:208, to:145},
+{from:209, to:124},
+{from:210, to:168},
+{from:211, to:6},
+{from:212, to:51},
+{from:213, to:74},
+{from:214, to:130},
+{from:215, to:60},
+{from:216, to:217},
+{from:217, to:111},
+{from:218, to:74},
+{from:219, to:18},
+{from:220, to:111},
+{from:221, to:51},
+{from:222, to:145},
+{from:223, to:31},
+{from:224, to:70},
+{from:225, to:19},
+{from:226, to:123},
+{from:227, to:112},
+{from:228, to:141},
+{from:229, to:49},
+{from:230, to:51},
+{from:231, to:51},
+{from:232, to:176},
+{from:233, to:168},
+{from:234, to:128},
+{from:235, to:112},
+{from:236, to:221},
+{from:237, to:211},
+{from:238, to:31},
+{from:239, to:217},
+{from:240, to:51},
+{from:241, to:60},
+{from:242, to:48},
+{from:243, to:44},
+{from:244, to:217},
+{from:245, to:86},
+{from:246, to:217},
+{from:247, to:145},
+{from:248, to:217},
+{from:249, to:111},
+{from:250, to:1},
+{from:251, to:70},
+{from:252, to:217},
+{from:253, to:48},
+{from:254, to:168},
+{from:255, to:120},
+{from:256, to:149},
+{from:257, to:258},
+{from:258, to:228},
+{from:259, to:217},
+{from:260, to:51},
+{from:261, to:31},
+{from:262, to:18},
+{from:263, to:51},
+{from:264, to:176},
+{from:265, to:44},
+{from:266, to:74},
+{from:267, to:56},
+{from:268, to:217},
+{from:269, to:217},
+{from:270, to:217},
+{from:271, to:111},
+{from:272, to:217},
+{from:273, to:217},
+{from:274, to:51},
+{from:275, to:217},
+{from:276, to:176},
+{from:277, to:217},
+{from:278, to:217},
+{from:279, to:228},
+{from:280, to:217},
+{from:281, to:217},
+{from:282, to:51},
+{from:283, to:228},
+{from:284, to:258},
+{from:285, to:6},
+{from:286, to:60},
+{from:287, to:228},
+{from:288, to:18},
+{from:289, to:221},
+{from:290, to:6},
+{from:291, to:51},
+{from:292, to:217},
+{from:293, to:49},
+{from:294, to:48},
+{from:295, to:60},
+{from:296, to:217},
+{from:297, to:280},
+{from:298, to:179},
+{from:299, to:6},
+{from:300, to:6},
+{from:301, to:145},
+{from:302, to:145},
+{from:303, to:217},
+{from:304, to:145},
+{from:305, to:217},
+{from:306, to:217},
+{from:307, to:44},
+{from:308, to:258},
+{from:309, to:51},
+{from:310, to:280},
+{from:311, to:51},
+{from:312, to:145},
+{from:313, to:31},
+{from:314, to:89},
+{from:315, to:221},
+{from:316, to:116},
+{from:317, to:179},
+{from:318, to:217},
+{from:319, to:60},
+{from:320, to:51},
+{from:321, to:217},
+{from:322, to:70},
+{from:323, to:179},
+{from:324, to:217},
+{from:325, to:74},
+{from:326, to:6},
+{from:327, to:177},
+{from:328, to:51},
+{from:329, to:6},
+{from:330, to:211},
+{from:331, to:217},
+{from:332, to:221},
+{from:333, to:51},
+{from:334, to:179},
+{from:335, to:145},
+{from:336, to:51},
+{from:337, to:221},
+{from:338, to:211},
+{from:339, to:217},
+{from:340, to:211},
+{from:341, to:1},
+{from:342, to:6},
+{from:343, to:217},
+{from:344, to:221},
+{from:345, to:18},
+{from:346, to:217},
+{from:347, to:217},
+];
+  // create a network
+  var container=document.getElementById('mynetwork');
+  var data={
+    nodes: nodes,
+    edges: edges,
+  }; 
+  var network = new vis.Network(container, data, options);
+// network.on("resize", function(params) {console.log(params.width,params.height)});   
+ function moveToNode (xpos, ypos, s) {
+    var options = {
+        position: {x:xpos, y:ypos},
+        scale: s,
+        offset: {x:0,y:0},
+        animation: true, // default duration is 1000ms and default easingFunction is easeInOutQuad.
+        animation: {
+             duration: 1500,
+            easingFunction: "easeInOutCubic"   
+        },
+    }
+    network.moveTo(options);
+}    
+moveToNode (243.291748, 271.382111, 1.5); 
+
+<!--- this requires jQuery --->
+<!--- http://visjs.org/examples/network/33_animation.html --->    
+     $("#myselect").on("change", function () 
+    {
+        $(".show-hide").hide();
+        var page  = $(this).val();
+        $("#" + page).show();   
+        switch (page) 
+        {
+            case "form_name1": // lisp 
+                moveToNode(97.669983, 357.864319, 4.5);
+                break;   
+            case "form_name1_1": // logo 
+                moveToNode(133.670288, 395.822571, 10);
+                break;     
+            case "form_name1_2": // forth
+                moveToNode(134.688736, 328.753937, 10); 
+                break; 
+            case "form_name1_3": // Smalltalk
+                moveToNode(62.160744, 405.966156, 10); 
+                break; 
+            case "form_name1_4": // Scheme family
+                 moveToNode(52.242844, 338.253174, 10); 
+                break; 
+            case "form_name1_5": // Ruby family
+                moveToNode(100.537506, 406.108459, 10); 
+                break; 
+            case "form_name2": // Imperative Languages
+                moveToNode(258.665344, 205.316452, 6); 
+                break; 
+            case "form_name2_1": // ISWIM family
+                moveToNode(66.777756, 179.311218, 6); 
+                break; 
+            case "form_name2_2": //JOSS and BASIC family
+                 moveToNode(228.531235,140.361191, 6.5); 
+                break; 
+            case "form_name2_3": // Algol family
+                moveToNode(156.662766, 205.605164, 5); 
+                break; 
+            case "form_name2_4": // Pascal family
+                moveToNode(103.752930, 246.183548, 8);
+                break;
+            case "form_name2_5": // C family
+                moveToNode (333.309967, 209.736130, 4); 
+                break; 
+            case "form_name3": // Array
+                 moveToNode (189.360718, 390.561981, 6.5); 
+                break; 
+            case "form_name4": // Business
+                moveToNode (207.660431, 333.076324, 10); 
+                break;  
+            case "form_name5": // Logic Languages
+                moveToNode (214.916962, 266.367493, 10); 
+                break; 
+            case "form_name6": // Definition Languages
+                moveToNode (293.557281, 353.338562, 7); 
+                break; 
+        }
+    });
+</script>
+</body>
+</html>
