@@ -1,1 +1,125 @@
-Hello, world
+ <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>MODELING THE EVOLUTION OF PROGRAMMING LANGUAGES</title>
+        <meta name="description" content="Interactive visualizations of programming language maps.">
+     <style>
+         html {
+    background-color: #e6e9e9;
+    background-image: -webkit-linear-gradient(270deg,rgb(230,233,233) 0%,rgb(216,221,221) 100%);
+    background-image: linear-gradient(270deg,rgb(230,233,233) 0%,rgb(216,221,221) 100%);
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    margin: 0 auto;
+    padding: 2em 2em 4em;
+    max-width: 800px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5em;
+    color: #545454;
+    background-color: #ffffff;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #222;
+    font-weight: 600;
+    line-height: 1.3em;
+}
+
+h2 {
+    margin-top: 1.3em;
+}
+
+a {
+    color: #0083e8;
+}
+
+b, strong {
+    font-weight: 600;
+}
+
+samp {
+    display: none;
+}
+
+img {
+    -webkit-animation: colorize 2s cubic-bezier(0, 0, .78, .36) 1;
+    animation: colorize 2s cubic-bezier(0, 0, .78, .36) 1;
+    background: transparent;
+    border: 10px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    display: block;
+    margin: 1.3em auto;
+    max-width: 95%;
+}
+
+@-webkit-keyframes colorize {
+    0% {
+        -webkit-filter: grayscale(100%);
+    }
+    100% {
+        -webkit-filter: grayscale(0%);
+    }
+}
+
+@keyframes colorize {
+    0% {
+        filter: grayscale(100%);
+    }
+    100% {
+        filter: grayscale(0%);
+    }
+}
+
+     </style>
+</head>
+
+<body>
+<h1>Modeling the Evolution of Programming Languages</h1>
+<p>by Sergi Valverde and Ricard V. Solé</p>
+<h2>Summary</h2>
+<p>
+Is cultural evolution similar to biological evolution? In our paper <a href="http://www.santafe.edu/media/workingpapers/14-09-030.pdf">Punctuated Equilibrium in the Large-Scale Evolution of Programming Languages</a> (<a href ="http://rsif.royalsocietypublishing.org/">Journal of Royal Society Interface</a>, in press), we have studied the natural and almost biological evolution of programming languages, which have deeply marked social and technological advances in the last 60 years. Technological change is very difficult to study because there is no established framework. Network theory allows us to analyse their historical connections and provides a systematic way of reconstructing phylogenetic networks. Our method can be extrapolated to other cultural systems and consistently captures the main classes of artificial languages and the widespread horizontal design exchanges, revealing a punctuated evolutionary path.  
+</p>   
+
+<h2>Disentangling Influence Relations of Programming Languages</h2>
+
+<p>
+The digital world is a modern Tower of Babel. Instead of a single tongue, developers design software systems using several languages at the same time. Some of these languages are specialised in handling images or complex sound processing and others perform queries in very large databases. To understand the complexity of information technologies, one has to realize first that programming languages have reached a stage of immense creativity and constant experimentation with new ideas. This resembles the earlier stages of biological evolution, which are characterized by periods of rapid speciation and diversification (like the <a href="http://www.economist.com/news/science-and-technology/21573951-chinese-palaeontologists-hope-explain-rise-animals-kingdom-come">Cambrian explosion</a>). 
+    
+<img src = "influences_website.png" alt = "The network of historical influences between programming languages" />
+ 
+The almost biological evolution of programming languages means that the structures they build are becoming increasingly complex (see previous figure). An important challenge is how to properly define evolutionary trees or clades in the history of programming languages. This is mainly because we don not have an accepted definition of "cultural genome". Fortunately, each language leaves an imprint in technological evolution and we can use network analysis to learn how to track that down.
+</p>
+        
+<h2>The Influence Backbone of Programming Languages </h2>
+<p>
+Our method is based in public <a href="http://en.wikipedia.org/wiki/History_of_programming_languages">
+    Wikipedia</a> data and maps what languages influence each other. We use a simple network measure of similarity between languages, very much like recommendation algorithms used by Amazon. Although the method is quite simple, it yields consistent results with current knowledge about programming languages:
+    </p>
+    
+<p>
+<img src = "backbone_website.png" alt = "Interactive visualization of the backbone" />
+    Click <a href="paradigms.html">here</a> for navigating the Influence Backbone.
+</p>
+
+<p> Using both data analysis and network modelling, it is shown that programming language evolution is highly uneven, marked by innovation events where new languages are created out of improved combinations of different structural components belonging to previous languages. These radiation events occur in a bursty pattern and are tied to novel technological and social niches. Our method can be extrapolated to other systems and consistently captures the major classes of languages and the widespread horizontal design exchanges, revealing a punctuated evolutionary path.</p>
+
+
+<h2>More information</h2>
+
+<ul>
+    <li> In the recent series of podcasts <a href="http://www.bbc.co.uk/programmes/b05qqhqp">Codes that Changed the World</a>, Aleks Krotoski tells the story of the languages that have been used to talk to machines (BBC Radio 4 - April 6-10, 2015).
+    </li>
+    <li> Check also the <a href="http://www.tnmoc.org/">website</a> of the National Museum of Computing.
+    </li>
+</ul>
+    
+<p>
+Published on May 14th 2014 by <a href="http://complex.upf.es/~sergi">Sergi Valverde</a> (<a href="https://twitter.com/svalver">@svalver</a>).   
+</p>
+</body>
+</html>
