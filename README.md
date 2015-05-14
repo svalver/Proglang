@@ -11,7 +11,7 @@ Valverde, S. and Sole, R.V. (2015) "Punctuated equilibrium in the large-scale ev
 
 ### Website
 
-Network visualizations of programming languages can be found on: __http://proglang.github.io/__
+Network visualizations of programming languages can be found on: __http://svalver.github.io/Proglang/__
 
 ### Source code
 
