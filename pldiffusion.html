@@ -1,0 +1,209 @@
+ <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Cultural Diffusion of Programming Languages</title>
+        <meta name="description" content="A Netlogo Implementation of Cultural Diffusion of Programming Language Innovations.">
+     <style>
+         html {
+    background-color: #e6e9e9;
+    background-image: -webkit-linear-gradient(270deg,rgb(230,233,233) 0%,rgb(216,221,221) 100%);
+    background-image: linear-gradient(270deg,rgb(230,233,233) 0%,rgb(216,221,221) 100%);
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    margin: 0 auto;
+    padding: 2em 2em 4em;
+    max-width: 800px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5em;
+    color: #545454;
+    background-color: #ffffff;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #222;
+    font-weight: 600;
+    line-height: 1.3em;
+}
+
+h2 {
+    margin-top: 1.3em;
+}
+
+a {
+    color: #0083e8;
+}
+
+b, strong {
+    font-weight: 600;
+}
+
+samp {
+    display: none;
+}
+
+img {
+    -webkit-animation: colorize 2s cubic-bezier(0, 0, .78, .36) 1;
+    animation: colorize 2s cubic-bezier(0, 0, .78, .36) 1;
+    background: transparent;
+    border: 10px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    display: block;
+    margin: 1.3em auto;
+    max-width: 95%;
+}
+
+@-webkit-keyframes colorize {
+    0% {
+        -webkit-filter: grayscale(100%);
+    }
+    100% {
+        -webkit-filter: grayscale(0%);
+    }
+}
+
+@keyframes colorize {
+    0% {
+        filter: grayscale(100%);
+    }
+    100% {
+        filter: grayscale(0%);
+    }
+}
+
+     </style>
+</head>
+
+<body>
+<h1>Cultural Diffusion of Programming Languages</h1>
+<p>by Sergi Valverde and Ricard V. Solé</p>
+    
+<p>
+<img src = "snapshot.png" alt = "A snapshot of the Netlogo model" />    
+<a href="PLdiffusion.nlogo">Download Netlogo model</a>
+</p>
+    
+<h2>What is it?</h2>
+<p>
+This model demonstrates the effect of “positive feedback” in the diffusion of programming language innovations. This is an implementation of the model described in the paper “A Cultural Diffusion Model for the Rise and Fall of Programming Languages” by Sergi Valverde and Ricard V. Sole (submitted for publication in Human Biology). For a detailed discussion and analysis of this model, the reader is encouraged to refer to this paper. 
+</p>
+
+<p>
+Positive feedback (also called “increasing returns to scale” in the economic literature) refers to social amplification effects that are beneficial for the rich and harmful for the poor.  Sometimes, the less fit option rises to full market domination because “the more users a given technology has, the larger the chances that other users will acquire it”. That is, the more frequent option dominates over the initially less popular options.
+</p>   
+    
+<h2>How it works?</h2>
+
+<p>
+The model consists of a static population of developers and a fixed pool of programming languages. Each developer is located at each patch of the lattice. Similarly to Axelrod’s model of cultural dissemination (see reference at the end), the programming culture of a developer is described by a vector that holds a certain number of languages from 1 to M.  Initially, all developers (patches) do not use any language. At each time step, patches update its cultural value following three rules:  (1) “Innovation” a developer ‘discovers’ a new language chosen at random with certain probability; (2) “Adoption” this is a contact-like process between neighbouring developers. One of the neighbour patches is selected at random and one language is adopted with a probability that is proportional to its frequency in the population. (3) “Forgetting” patches discard one language at random with some probability. Rare languages are discarded more frequently. 
+</p>
+    
+<h2>How to use it?</h2>
+<p>
+Choose the population size selecting the size of the lattice in x and y directions and input these values on “model settings”.  Every patch has a color which represents the diversity of adopted languages (check the function ‘transfer_colormap’ to learn how the mapping is performed). The mapping was been designed to indicate the presence (or absence) of language diversity. If two patches show the same color, it is because they have adopted exactly the same programming languages. 
+
+The user interface presents four input boxes for the following parameters: probability of innovation, probability of adoption, probability of forgetting and maximum number of distinct languages. The qualitative behaviour of the model is quite robust to a wide range of parameter values.
+</p>
+
+<h2>Things to notice</h2>
+<p>
+This is a minimal model of programming language adoption based in popularity rankings. The model can reproduce the empirical distribution of language popularity, e.g., the <a href="http://www.tiobe.com/index.php/content/paperinfo/tpci/index.html">TIOBE index</a>. The frequency-rank distribution of language popularity follows a generalised beta distribution (DGBD) (Martinez-Mekler et al, 2009).
+</p>
+
+<p>
+Models like this can help us to understand why some technologies  success (or fail) within a competitive environment. According to the simulated dynamics of technological adoption, a large percentage of existing programming languages will be abandoned in the short/mid-term. 
+</p>
+    
+    
+<h2>Things to try</h2>
+<p>
+Vary the population size, the maximum number of languages that can coexist in the community and the probabilities of innovation and adoption. How language diversity depends on variable innovation rates?  
+</p>
+    
+<h2>Extending the model</h2>
+<p>
+Future work should extend the model in order to take into account specific features of programming languages, like the existence of specific technological niches or the cognitive characteristics of specific languages.  
+</p>
+    
+<h2>Netlogo features</h2>
+<p>
+The implementation uses the ‘array’ extension (this extension comes pre-packaged with Netlogo 5.0). It is possible to adapt this model to use lists but the array extension makes the model run faster.  
+</p>
+  
+<h2>Related models</h2>
+<p>
+This model is related to the “Urban Suite — Positive Feedback” found in the Netlogo Models Library and also to community implementations of the Axelrod’s model of Cultural Dissemination.
+</p>    
+    
+<h2>Credits and references</h2>
+<p>
+This model has been developed by Sergi Valverde and Ricard Solé.  It was implemented by Sergi Valverde (svalver@gmail.com). 
+</p>
+
+<p>
+This is the paper were the model was first described:
+</p>
+    
+<p>
+Valverde, S., Solé, R. V. (2005) A Cultural Diffusion Model for the Rise and Fall of Programming Languages, submitted to Human Biology. 
+</p>
+
+<p>
+In the following paper there is related network analysis of programming language evolution:
+</p>
+    
+<p>    
+Valverde, S., Solé, R. V. (2005) Punctuated Equilibrium in the Large-Scale Evolution of Programming Languages, J. Roy. Soc. Interface (in press). 
+</p>
+
+<p>
+The generalised beta distribution has been described here: 
+</p>
+    
+<p>
+Martinez-Mekler, G., Martínez, R. A., del Ro, M. B., Mansilla R., Miramontes, P., and Cocho, G. (2009) Universality of Rank-Ordering Distributions in the Arts and Sciences PLoS ONE 4(3): e4791.
+</p>
+
+<p>
+This is the paper where Axelrod presented his model of cultural dissemination:  
+</p>
+    
+<p>
+Axelrod, R. 1997. “The dissemination of culture - A model with local convergence and global polarization.” Journal of Conflict Resolution 41:203-226.  
+</p>
+    
+<h2>How to cite</h2>
+<p>
+If you mention this model in a publication, we ask that you include this citation for the model itself:
+</p>
+
+<p>
+Valverde, S., Solé, R. V. (2005) A Cultural Diffusion Model for the Rise and Fall of Programming Languages, submitted to Human Biology.
+</p>
+    
+<h2>Copyright and License</h2>
+
+<p>
+Copyright 2015 Sergi Valverde.
+</p>
+    
+<p>
+![CC BY-NC-SA 3.0](http://ccl.northwestern.edu/images/creativecommons/byncsa.png)
+</p>
+    
+<p>
+This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
+</p>
+    
+<p>
+Commercial licenses are also available. To inquire about commercial licenses, please contact Sergi Valverde at svalver@gmail.com.
+</p>        
+    
+<p>
+Published on June 12th 2015 by <a href="http://complex.upf.es/~sergi">Sergi Valverde</a> (<a href="https://twitter.com/svalver">@svalver</a>).   
+</p>
+</body>
+</html>
